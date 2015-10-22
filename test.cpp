@@ -22,7 +22,13 @@ int main(int argc, char** argv) {
 
 	XMLParser parser(targetDir);
 	parser.parseXMLFile();
+	XMLNode *header = parser.getWrapperNode();
 
+	XMLNode *ptr = header->getNextLevel();
+	cout << ptr << endl;
+	//cout << ptr->getNodeName() << endl;
+
+	//while(ptr->getNextLevel()) ptr = ptr->getNextLevel();
 
 	return 0;
 }

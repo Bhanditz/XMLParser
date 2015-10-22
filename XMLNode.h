@@ -51,10 +51,10 @@ public:
 		map->insert({key, value});
 	}
 
-	string getAttribute(string &key)
+	string getAttribute(string key)
 	{
-		if(map->find(key) != map->end()) return map->at(key);
-		else sys_err("[ERROR]: attribute[" + key +  "] does not exist in node[" + node_name + "]...");
+		if(map->find(key) == map->end()) sys_err("[ERROR]: attribute[" + key +  "] does not exist in node[" + node_name + "]...");
+		return map->at(key);
 	}
 
 	// return the whole map for interation in the call
@@ -73,6 +73,8 @@ public:
 		} else {
 			map = 0;
 		}
+		next_level = 0;
+		next_node = 0;
 	}
 
    ~XMLNode() 

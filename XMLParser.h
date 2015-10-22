@@ -76,6 +76,9 @@ public:
 			if(!header) {
 				header = new XMLNode(parseNodeName(buffer), countLevel(buffer));	
 				stack.push(*header);
+#ifdef _DEBUG
+				cout << "push1 " + header->getNodeName() << endl;
+#endif
 				continue;
 			}
 			
@@ -95,6 +98,9 @@ public:
 				XMLNode *new_node = 0;
 				if(ptr->getNodeName() == node_name) {
 					stack.pop();
+#ifdef _DEBUG
+					cout << "pop2 " + ptr->getNodeName() << endl;
+#endif
 					last_node = ptr;
 				} else {
 					if(this_level == info_level-1) {
@@ -108,6 +114,9 @@ public:
 						ptr->setNextLevel(new_node);
 					}
 					stack.push(*new_node);
+#ifdef _DEBUG
+					cout << "push2 " + stack.top().getNodeName() << endl;
+#endif
 				} 
 			}
 		}				
