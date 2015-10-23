@@ -1,0 +1,23 @@
+Author: JUN ZENG <zengjun0916@gmail.com>
+If any bugs or promotion ideas, feel free to contact to my email above.
+
+Don't forget to add option -std=c++11 when you compiling.
+
+class XMLNode:
+	This class is used to mark down the info of each wrap tag. Here two pointers are used to 
+	set up the structure, the next_level points to the next level of internal tags, can be regarded 
+	as horizonal direction, the next_node points to the next peer of tag, can be regarded as vertical
+	direction. The last level of tags will be regarded as attributes in the previous level node and 
+	stored in as <key, value> in the unordered_map.
+
+class XMLParser:
+	This class is the main interface to deal with the XML file and extract the relevant infomation.
+	XMLParser::XMLParser() can preprocess the XML file and produce the structure mentioned above.
+	Then according to the structure, the caller function can iterate the nodes to get the info needed.
+
+	<I will write a elegant iterator later for convenient using>		
+
+class parseException:
+	For the xml parsing and the xml file exception tracking.
+
+	

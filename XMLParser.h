@@ -12,7 +12,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <unordered_map>
 #include <algorithm>
 #include <stack>
 #include <string.h>
@@ -22,6 +21,7 @@
 #include <pwd.h>
 #include <limits.h>
 
+#include "Exception.h"
 #include "XMLNode.h"
 
 #define all(c) (c).begin(), (c).end()
@@ -69,7 +69,7 @@ public:
 		*/
 
 		if((info_level = findValueLevel()) < 0) {
-			sys_err("[ERROR]: cannot find any useful info of XML file...");
+			throwError("<XML file error>: unavailable object value of XML file");
 		}
 		while(getline(in, buffer)) {
 			if(!isValidLine(buffer)) continue;
@@ -79,9 +79,6 @@ public:
 			if(!header) {
 				header = new XMLNode(parseNodeName(buffer), countLevel(buffer));	
 				stack.push(header);
-#ifdef _DEBUG
-				cout << "push1 " + header->getNodeName() << endl;
-#endif
 				continue;
 			}
 			
@@ -102,9 +99,6 @@ public:
 				XMLNode *new_node = 0;
 				if(ptr->getNodeName() == node_name) {
 					stack.pop();
-#ifdef _DEBUG
-					cout << "pop2 " + ptr->getNodeName() << endl;
-#endif
 					last_node = ptr;
 				} else {
 					if(this_level == info_level-1) {
@@ -118,19 +112,19 @@ public:
 						ptr->setNextLevel(new_node);
 					}
 					stack.push(new_node);
-#ifdef _DEBUG
-					cout << "push2 " + stack.top().getNodeName() << endl;
-#endif
 				} 
 			}
 		}				
 	
 		in.close();
+		if(!stack.empty()) {
+			throwError("<XML file error>: tags mismatch");
+		}
 	}	
 
 
 
-	XMLParser(string filepath) 
+	XMLParser(const string filepath) 
 	{
 		file_path = filepath;
 		header = 0;
@@ -171,7 +165,7 @@ private:
 		return -1;
 	}
 
-	string parseNodeName(string &s) 
+	string parseNodeName(const string &s) 
 	{
 		int left = 0, right = 0;
 		string res;
@@ -190,7 +184,7 @@ private:
 		return res;
 	}
 
-	string parseNodeValue(string &s) 
+	string parseNodeValue(const string &s) 
 	{
 		int i = 0, len = s.length();
 		string res;
@@ -212,7 +206,7 @@ private:
 	}
 
 	// delete the space on the two ends of string
-	string trim(string &s) 
+	string trim(const string &s) 
 	{
 		int left = 0, right = s.length()-1;
 		while(s.at(left) == '\t' || s.at(left) == ' ') left++;
@@ -228,7 +222,7 @@ private:
 	/* judge the level of tab according to the indents
 	   if it does not contain the tag, it regards as value, and return -1
 	*/	
-	int countLevel(string &s) 
+	int countLevel(const string &s) 
 	{
 		int cnt = 0; 
 		size_t i = 0;
@@ -242,7 +236,7 @@ private:
 	}
 
 	// a line is valid when it is a tag or value or mix
-	bool isValidLine(string &s) 
+	bool isValidLine(const string &s) 
 	{
 		if(s.find("<?") !=  string::npos) return false;
 		if(s.find("<!") !=  string::npos) return false;
@@ -252,7 +246,7 @@ private:
 	}
 
 	// fill with spaces
-	bool isEmptyLine(string &s) 
+	bool isEmptyLine(const string &s) 
 	{
 		for(size_t i=0; i<s.length(); i++) {
 			if(s.at(i) != ' ') return false;

@@ -6,7 +6,7 @@
 #include <string.h>
 #include <string>
 
-#include "Aux.h"
+#include "Exception.h"
 
 using namespace std;
 
@@ -45,26 +45,26 @@ public:
 		next_node = node;
 	}
 
-	void addAttribute(string key, string value) 
+	void addAttribute(const string &key, const string &value) 
 	{
-		if(!map) sys_err("[ERROR]: cannot add attribute to the node[" + node_name +"] ...");
+		if(!map) throwError("<runtime error>: fail to add attribute to the node[" + node_name +"] ...");
 		map->insert({key, value});
 	}
 
-	string getAttribute(string key)
+	string getAttribute(const string &key)
 	{
-		if(map->find(key) == map->end()) sys_err("[ERROR]: attribute[" + key +  "] does not exist in node[" + node_name + "]...");
+		if(map->find(key) == map->end()) throwError("<runtime error>: attribute[" + key +  "] doesn't exist in node[" + node_name + "]...");
 		return map->at(key);
 	}
 
 	// return the whole map for interation in the call
 	unordered_map<string, string>*  getAttributeSet() 
 	{
-		if(!map) sys_err("[ERROR]: node[" + node_name + "] doesn't contain MAP...");
+		if(!map) throwError("<runtime error>: node[" + node_name + "] doesn't contain MAP...");
 		return map;
 	}
 
-	XMLNode(string name, int level, bool last=false) 
+	XMLNode(const string &name, int level, bool last=false) 
 	{
 		node_name = name;
 		node_level = level;
