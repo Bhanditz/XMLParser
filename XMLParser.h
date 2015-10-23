@@ -54,9 +54,9 @@ public:
 	{
 		ifstream in;
 		string buffer; // use to read line
-		stack<XMLNode> stack;
+		stack<XMLNode*> stack;
 		XMLNode *ptr = 0, *last_node = 0;		
-		int info_level = INT_MIN, this_level = 0;
+		int info_level = INT_MIN, this_level = 0, cnt = 0;
 
 		in.open(file_path);
 		
@@ -73,9 +73,12 @@ public:
 		}
 		while(getline(in, buffer)) {
 			if(!isValidLine(buffer)) continue;
+	
+			cnt++;
+
 			if(!header) {
 				header = new XMLNode(parseNodeName(buffer), countLevel(buffer));	
-				stack.push(*header);
+				stack.push(header);
 #ifdef _DEBUG
 				cout << "push1 " + header->getNodeName() << endl;
 #endif
@@ -83,7 +86,7 @@ public:
 			}
 			
 			// add the key-value pair to the node of stack top
-			ptr = &stack.top();
+			ptr = stack.top();
 			this_level = countLevel(buffer);
 			if(this_level == info_level) {
 				string key = parseNodeName(buffer);
@@ -113,7 +116,7 @@ public:
 					} else {
 						ptr->setNextLevel(new_node);
 					}
-					stack.push(*new_node);
+					stack.push(new_node);
 #ifdef _DEBUG
 					cout << "push2 " + stack.top().getNodeName() << endl;
 #endif
