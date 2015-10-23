@@ -3,8 +3,7 @@ If any bugs or promotion ideas, feel free to contact to my email above.
 
 ///////////////////////////// INSTRUCTION /////////////////////////////////////////////
 In the command line, the root of this file direcotory, type "make".
-Then the static library file "libXMLParser.a" will produce and place it into your program
-header folder, like "include".
+Then the static library file "libXMLParser.a" will produce and place it into your program header folder, like "include".
 
 Don't forget to add option -std=c++11 when you compiling with "libXMLParser.a"
 
