@@ -1,7 +1,15 @@
 Author: JUN ZENG <zengjun0916@gmail.com>
 If any bugs or promotion ideas, feel free to contact to my email above.
 
-Don't forget to add option -std=c++11 when you compiling.
+///////////////////////////// INSTRUCTION /////////////////////////////////////////////
+In the command line, the root of this file direcotory, type "make".
+Then the static library file "libXMLParser.a" will produce and place it into your program
+header folder, like "include".
+
+Don't forget to add option -std=c++11 when you compiling with "libXMLParser.a"
+
+////////////////////////////////////////////////////////////////////////////////////////
+
 
 class XMLNode:
 	This class is used to mark down the info of each wrap tag. Here two pointers are used to set up the structure, the next_level points to the next level of internal tags, can be regarded as horizonal direction, the next_node points to the next peer of tag, can be regarded as vertical direction. The last level of tags will be regarded as attributes in the previous level node and stored in as <key, value> in the unordered_map.
@@ -14,4 +22,48 @@ class XMLParser:
 class parseException:
 	For the xml parsing and the xml file exception tracking.
 
+////////////////////////////////// Test.cpp /////////////////////////////////////////
+#include <iostream>
+#include <fstream>
+#include <unordered_map>
+#include <string.h>
+#include <string>
+
+#include "XMLParser.h"
+
+using namespace std;
+
+
+int main(int argc, char** argv) {
+
+	try{
+		if(argc < 2) {
+			throwError("input format: ./a.out <file_path>");
+		}
+
+		XMLParser parser(argv[1]);
+		parser.parseXMLFile();
+		XMLNode *header = parser.getWrapperNode();
+		XMLNode *ptr = header;
+
+		while(ptr->getNextLevel()) ptr = ptr->getNextLevel();
+
+		while(ptr) {
+			cout << ptr->getNodeName() + ": " << endl;
+			unordered_map<string, string> *map = ptr->getAttributeSet();
+			for(auto i = map->begin(); i != map->end(); i++) {
+				cout << "\t" + i->first + ": " + i->second << endl;	
+			}
+
+			ptr = ptr->getNextNode();
+		}
+
+	} catch(const runtime_error &e) {
+		cout << e.what() << endl;
+	}
+
+	exit(0);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
 	
