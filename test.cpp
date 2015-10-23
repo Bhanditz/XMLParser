@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
 
 	while(ptr) {
 		cout << ptr->getNodeName() + " " + ptr->getAttribute("id") << endl;
+
 		ptr = ptr->getNextNode();
 	}
 
