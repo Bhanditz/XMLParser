@@ -91,7 +91,8 @@ public:
 			if(this_level == info_level) {
 				string key = parseNodeName(buffer);
 				string value = parseNodeValue(buffer);
-				ptr->addAttribute(key, value);	
+				if(value.empty()) getline(in, value);
+				ptr->addAttribute(key, trim(value));	
 
 			} else {
 				/* if start tag, connect the pointer and push the node into stack
@@ -205,11 +206,18 @@ private:
 				i++;
 			}	
 			res = s.substr(left+1, right-left-1);
-		} else {
-			res = s.substr(i, len-i);
-		}		
+		} 
 
 		return res;
+	}
+
+	// delete the space on the two ends of string
+	string trim(string &s) 
+	{
+		int left = 0, right = s.length()-1;
+		while(s.at(left) == '\t' || s.at(left) == ' ') left++;
+		while(s.at(right) == '\t' || s.at(right) == ' ') right--;
+		return s.substr(left, right-left+1);
 	}
 
 	void toLower(string &s) 

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
 #include <unistd.h>
 #include <sys/types.h>
 #include <string.h>
@@ -20,7 +21,7 @@ int main(int argc, char** argv) {
 	strcpy(targetDir, getpwuid(getuid())->pw_dir);
 	strcat(targetDir, "/.mdtmApp.xml");
 
-	XMLParser parser(targetDir);
+	XMLParser parser("sample2.xml");
 	parser.parseXMLFile();
 	XMLNode *header = parser.getWrapperNode();
 	XMLNode *ptr = header;
@@ -28,7 +29,11 @@ int main(int argc, char** argv) {
 	while(ptr->getNextLevel()) ptr = ptr->getNextLevel();
 
 	while(ptr) {
-		cout << ptr->getNodeName() + " " + ptr->getAttribute("id") << endl;
+		cout << ptr->getNodeName() + ": " << endl;
+		unordered_map<string, string> *map = ptr->getAttributeSet();
+		for(auto i = map->begin(); i != map->end(); i++) {
+			cout << "\t" + i->first + ": " + i->second << endl;	
+		}
 
 		ptr = ptr->getNextNode();
 	}
